@@ -534,14 +534,14 @@ def _lambertw_i_from_v(resistance_shunt, resistance_series, nNsVth, voltage,
 
 
 def _lambertw(photocurrent, saturation_current, resistance_series,
-              resistance_shunt, nNsVth, ivcurve_pnts=None):
+              resistance_shunt, nNsVth, i_sc, v_oc, ivcurve_pnts=None):
     # Compute short circuit current
-    i_sc = _lambertw_i_from_v(resistance_shunt, resistance_series, nNsVth, 0.,
-                              saturation_current, photocurrent)
+#    i_sc = _lambertw_i_from_v(resistance_shunt, resistance_series, nNsVth, 0.,
+#                              saturation_current, photocurrent)
 
     # Compute open circuit voltage
-    v_oc = _lambertw_v_from_i(resistance_shunt, resistance_series, nNsVth, 0.,
-                              saturation_current, photocurrent)
+#    v_oc = _lambertw_v_from_i(resistance_shunt, resistance_series, nNsVth, 0.,
+#                              saturation_current, photocurrent)
 
     params = {'r_sh': resistance_shunt,
               'r_s': resistance_series,
@@ -571,7 +571,7 @@ def _lambertw(photocurrent, saturation_current, resistance_series,
     # create ivcurve
     if ivcurve_pnts:
         ivcurve_v = (np.asarray(v_oc)[..., np.newaxis] *
-                     np.linspace(-3, 1.5, ivcurve_pnts))
+                     np.linspace(-5, 2, ivcurve_pnts))
 
         ivcurve_i = _lambertw_i_from_v(resistance_shunt, resistance_series,
                                        nNsVth, ivcurve_v.T, saturation_current,

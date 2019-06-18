@@ -626,8 +626,8 @@ class PVSystem(object):
         return cell_type
 
     def singlediode(self, photocurrent, saturation_current,
-                    resistance_series, resistance_shunt, nNsVth,
-                    ivcurve_pnts=None):
+                    resistance_series, resistance_shunt, nNsVth, 
+                    i_sc, v_oc, ivcurve_pnts=None):
         """Wrapper around the :py:func:`singlediode` function.
 
         Parameters
@@ -640,7 +640,7 @@ class PVSystem(object):
         """
         return singlediode(photocurrent, saturation_current,
                            resistance_series, resistance_shunt, nNsVth,
-                           ivcurve_pnts=ivcurve_pnts)
+                           i_sc, v_oc, ivcurve_pnts)
 
     def i_from_v(self, resistance_shunt, resistance_series, nNsVth, voltage,
                  saturation_current, photocurrent):
@@ -2139,8 +2139,8 @@ def sapm_effective_irradiance(poa_direct, poa_diffuse, airmass_absolute, aoi,
 
 
 def singlediode(photocurrent, saturation_current, resistance_series,
-                resistance_shunt, nNsVth, ivcurve_pnts=None,
-                method='lambertw'):
+                resistance_shunt, nNsVth, i_sc, v_oc, ivcurve_pnts=None,
+                method='lambertw', ):
     """
     Solve the single-diode model to obtain a photovoltaic IV curve.
 
@@ -2274,8 +2274,8 @@ def singlediode(photocurrent, saturation_current, resistance_series,
     if method.lower() == 'lambertw':
         out = _singlediode._lambertw(
             photocurrent, saturation_current, resistance_series,
-            resistance_shunt, nNsVth, ivcurve_pnts
-        )
+            resistance_shunt, nNsVth, i_sc, v_oc, ivcurve_pnts)
+        
         i_sc, v_oc, i_mp, v_mp, p_mp, i_x, i_xx = out[:7]
         if ivcurve_pnts:
             ivcurve_i, ivcurve_v = out[7:]
