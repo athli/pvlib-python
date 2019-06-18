@@ -571,7 +571,7 @@ def _lambertw(photocurrent, saturation_current, resistance_series,
     # create ivcurve
     if ivcurve_pnts:
         ivcurve_v = (np.asarray(v_oc)[..., np.newaxis] *
-                     np.linspace(0, 1, ivcurve_pnts))
+                     np.linspace(-3, 1.5, ivcurve_pnts))
 
         ivcurve_i = _lambertw_i_from_v(resistance_shunt, resistance_series,
                                        nNsVth, ivcurve_v.T, saturation_current,
