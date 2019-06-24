@@ -2140,7 +2140,7 @@ def sapm_effective_irradiance(poa_direct, poa_diffuse, airmass_absolute, aoi,
 
 def singlediode(photocurrent, saturation_current, resistance_series,
                 resistance_shunt, nNsVth, i_sc, v_oc, ivcurve_pnts=None,
-                method='lambertw', ):
+                method='lambertw'):
     """
     Solve the single-diode model to obtain a photovoltaic IV curve.
 
@@ -2285,15 +2285,15 @@ def singlediode(photocurrent, saturation_current, resistance_series,
         # equation for the diode voltage V_d then backing out voltage
         args = (photocurrent, saturation_current, resistance_series,
                 resistance_shunt, nNsVth)  # collect args
-        v_oc = _singlediode.bishop88_v_from_i(
-            0.0, *args, method=method.lower()
-        )
+        #v_oc = _singlediode.bishop88_v_from_i(
+        #    0.0, *args, method=method.lower()
+        #)
         i_mp, v_mp, p_mp = _singlediode.bishop88_mpp(
             *args, method=method.lower()
         )
-        i_sc = _singlediode.bishop88_i_from_v(
-            0.0, *args, method=method.lower()
-        )
+        #i_sc = _singlediode.bishop88_i_from_v(
+        #    0.0, *args, method=method.lower()
+        #)
         i_x = _singlediode.bishop88_i_from_v(
             v_oc / 2.0, *args, method=method.lower()
         )
@@ -2303,11 +2303,14 @@ def singlediode(photocurrent, saturation_current, resistance_series,
 
         # calculate the IV curve if requested using bishop88
         if ivcurve_pnts:
-            vd = v_oc * (
-                    (11.0 - np.logspace(np.log10(11.0), 0.0,
-                                        ivcurve_pnts)) / 10.0
-            )
-            ivcurve_i, ivcurve_v, _ = _singlediode.bishop88(vd, *args)
+            ivcurve_v = (np.asarray(v_oc)[..., np.newaxis] *
+                     np.linspace(-5, 2, ivcurve_pnts))
+
+            print(ivcurve_v)
+
+            ivcurve_i = _singlediode.bishop88_i_from_v(ivcurve_v.T, photocurrent, 
+                saturation_current, resistance_series, resistance_shunt,
+                                       nNsVth).T
 
     out = OrderedDict()
     out['i_sc'] = i_sc
